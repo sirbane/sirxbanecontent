@@ -75,6 +75,7 @@ export default function Dashboard() {
   const [queueTweets, setQueueTweets] = useState<Tweet[]>([]);
   const [bufferMetrics, setBufferMetrics] = useState<BufferMetrics | null>(null);
   const [bufferProfiles, setBufferProfiles] = useState<{ id: string; service_username: string }[]>([]);
+  const [bufferProfileError, setBufferProfileError] = useState("");
   const [selectedProfile, setSelectedProfile] = useState('');
   const [scheduling, setScheduling] = useState<string | null>(null);
   const [queueLoading, setQueueLoading] = useState(false);
@@ -116,6 +117,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (tab === 'setup') {
       fetch('/api/schedule-buffer?action=profiles')
+        
         .then(r => r.json())
         .then(({ profiles }) => {
           if (profiles) {
@@ -544,8 +546,12 @@ export default function Dashboard() {
                       </div>
                     ))}
                   </div>
+                ) : bufferProfileError ? (
+                  <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '10px 12px', fontSize: 12, color: '#fca5a5' }}>
+                    ⚠ {bufferProfileError}
+                  </div>
                 ) : (
-                  <div style={{ fontSize: 13, color: 'var(--text-dim)' }}>Loading profiles… (ensure BUFFER_ACCESS_TOKEN is set in .env.local)</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-dim)' }}>Loading profiles…</div>
                 )}
               </div>
 
